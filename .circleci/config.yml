@@ -8,37 +8,88 @@ orbs:
   # See the orb documentation here: https://circleci.com/developer/orbs/orb/circleci/node
   node: circleci/node@4.1
 
+executors:
+  docker-environment:
+    environment:
+      IMAGE_NAME: arnthordadi/mazesolver
+    docker:
+      - image: circleci/buildpack-deps:stretch
+  npm_executor:
+    parameters:
+      tag:
+        type: string
+        default: "8-stretch"
+    docker:
+      - image: cimg/base:stable
 
 jobs:
-  # Below is the definition of your job to build and test your app, you can rename and customize it as you want.
-  build-and-test:  
-    # These next lines define a Docker executor: https://circleci.com/docs/2.0/executor-types/
-    # You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # A list of available CircleCI Docker Convenience Images are available here: https://circleci.com/developer/images/image/cimg/node
+  test:
     docker:
-      - image: cimg/node:15.1
-    # Then run your tests!
-    # CircleCI will report the results back to your VCS provider.
+      - image: circleci/node:12.9.1-browsers
     steps:
-      # Checkout the code as the first step.
       - checkout
-      # Next, the node orb's install-packages step will install the dependencies from a package.json.
-      # The orb install-packages step will also automatically cache them for faster future runs.
-      - node/install-packages
-      # If you are using yarn instead npm, remove the line above and uncomment the two lines below.
-      # - node/install-packages:
-      #     pkg-manager: yarn 
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "package.json" }}
+            - dependencies-
+      - run: npm install
+      - save_cache:
+          key: dependencies-{{ checksum "package.json" }}
+          paths:
+            - node_modules
+            - ~/.npm 
+            - ~/.cache
       - run:
           name: Run tests
           command: npm test
+  build:
+    executor: docker-environment
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build Docker image
+          command: docker build -t $IMAGE_NAME:$CIRCLE_SHA1 . 
+      - run:
+          name: Archive Docker image
+          command: docker save -o image.tar $IMAGE_NAME
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
+  publish:
+    executor: docker-environment
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          name: Load archived Docker image
+          command: docker load -i /tmp/workspace/image.tar
+      - run:
+          name: Publish Docker Image to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin 
+            docker push $IMAGE_NAME:$CIRCLE_SHA1
 
 workflows:
   # Below is the definition of your workflow.
   # Inside the workflow, you provide the jobs you want to run, e.g this workflow runs the build-and-test job above.
   # CircleCI will run this workflow on every commit.
   # For more details on extending your workflow, see the configuration docs: https://circleci.com/docs/2.0/configuration-reference/#workflows
-  sample: 
+  build_publish_deploy:
     jobs:
-      - build-and-test
-      # For running simple node tests, you could optionally use the node/test job from the orb to replicate and replace the job above in fewer lines.
-      # - node/test
+      - test
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - publish:
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - test
+            - build
