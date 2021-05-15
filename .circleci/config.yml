@@ -80,8 +80,16 @@ workflows:
   build_publish_deploy:
     jobs:
       - test
-      - build
+      - build:
+          filters:
+            branches:
+              only:
+                - main
       - publish:
+          filters:
+            branches:
+              only:
+                - main
           requires:
             - test
             - build
