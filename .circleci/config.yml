@@ -28,10 +28,7 @@ jobs:
       - image: circleci/node:12.9.1-browsers
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - dependencies-{{ checksum "package.json" }}
-            - dependencies-
+
       - run: npm install
       - save_cache:
           key: dependencies-{{ checksum "package.json" }}
