@@ -16,6 +16,9 @@ function dijkstra(grid, start, finish)
     const orderedVisitedNodes = [];
     let dijkstrasGrid = getDijkstraGrid(grid, start);
 
+    dijkstrasGrid[start.row][start.col].distance = 0;
+
+
     let unvisitedNodes = getNodes(dijkstrasGrid);
     
     // While there are some unvisited nodes keep going
@@ -29,8 +32,6 @@ function dijkstra(grid, start, finish)
         // If the closest node is at a distance of infinity,
         // we must be trapped and should therefore stop.
         if (minDistNode.distance === Infinity){
-            console.log("This is not suppost to happen");
-            console.log(minDistNode.col, ", ", minDistNode.row);
             return [stripExtraData(orderedVisitedNodes), minDistNode];
         }
         // Mark the node as visited and set it to the unvisitedNodes
@@ -43,6 +44,8 @@ function dijkstra(grid, start, finish)
         // Lastly we update unvisited nodes, their distances and paths
         updateUnvisitedNeighbors(minDistNode, dijkstrasGrid);
     }
+    return [[], null]
+
 }
 
 function stripExtraData(nodes){
@@ -83,7 +86,6 @@ function updateUnvisitedNeighbors(node, grid) {
   function findClosestNode(unvisitedNodes) {
     // Sorts after distance
     unvisitedNodes.sort((nodeA, nodeB) => nodeA.distance - nodeB.distance);
-    //console.log("Sorted unvisited nodes: ", unvisitedNodes);
     // Gets the first element in the array
     return unvisitedNodes.shift();
   }
@@ -106,9 +108,6 @@ function updateUnvisitedNeighbors(node, grid) {
                 const { col, row, isStart, isFinish, isWall } = node;
                 
                 let dijkstraNode = createDijkstraNode(col, row, isStart, isFinish, isWall);
-                if(node === startNode) 
-                    dijkstraNode.distance = 0;
-
                 dijkstraRow.push(dijkstraNode);
             }
             dijkstraGrid.push(dijkstraRow);
