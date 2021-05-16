@@ -27,15 +27,8 @@ jobs:
     docker:
       - image: circleci/node:12.9.1-browsers
     steps:
-      - checkout
 
       - run: npm install
-      - save_cache:
-          key: dependencies-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-            - ~/.npm 
-            - ~/.cache
       - run:
           name: Run tests
           command: npm test
