@@ -15,7 +15,6 @@ function createDijkstraNode(col, row, isStart, isFinish, isWall, distance = Infi
         isStart: isStart,
         isFinish: isFinish,
         isWall: isWall,
-        isWall: isWall,
         distance: distance,
         previousNode: null,
         isVisisted: false

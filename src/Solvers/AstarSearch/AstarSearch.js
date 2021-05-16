@@ -1,7 +1,11 @@
 const { createCellNode, createAstarNode } = require('../../Services/NodeService/NodeService');
 function Astar(grid, start, finish){
 
-    let astartGrid = getAStarGrid(grid, start, finish);
+    let astartGrid = getAStarGrid(grid);
+
+    astartGrid[start.row][start.col].distance = 0;
+    astartGrid[start.row][start.col].heuristic = getHeuristicScore(astartGrid[start.row][start.col], finish);
+    astartGrid[start.row][start.col].fullDistance = 0 + astartGrid[start.row][start.col].heuristic;
 
     let unvisitedNodes = [astartGrid[start.row][start.col]];
     let visitiedNodes = [];
@@ -12,14 +16,16 @@ function Astar(grid, start, finish){
         
         if (currentNode.isWall) continue;
         
-        if (currentNode.distance === Infinity)
+        if (currentNode.distance === Infinity){
             return [stripExtraData(visitiedNodes), currentNode];
+        }
         
         currentNode.isVisited = true;
         visitiedNodes.push(currentNode);
         
-        if (currentNode.isFinish)
+        if (currentNode.isFinish){
             return [stripExtraData(visitiedNodes), currentNode];
+        }
 
         let newArray = unvisitedNodes.filter(node => node != currentNode);
         unvisitedNodes = newArray;
@@ -92,18 +98,13 @@ function getHeuristicScore(neighbor, finish){
     return (xChange + yChange);
 }
 
-function getAStarGrid(grid, startNode, finishNode){
+function getAStarGrid(grid){
     let astarGrid = [];
     for (const row of grid) {
         let astarRow = [];
         for (const node of row) {
             const { col, row, isStart, isFinish, isWall } = node;    
             let astarNode = createAstarNode(col, row, isStart, isFinish, isWall);
-            if(node === startNode) {
-                astarNode.distance = 0;
-                astarNode.heuristic = getHeuristicScore(astarNode, finishNode);
-                astarNode.fullDistance = astarNode.distance + astarNode.heuristic;
-            }
             astarRow.push(astarNode);
         }
         astarGrid.push(astarRow);
