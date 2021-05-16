@@ -1,4 +1,4 @@
-const { Astar } = require('./AstarSearch');
+const { astar } = require('./AstarSearch');
 const { createTestGrid, getExpectedResaults } = require('./Constants/SmallAstar5x5test');
 
 test('Simple 5x5 Astar test', () => {
@@ -12,7 +12,7 @@ test('Simple 5x5 Astar test', () => {
     let endNode = grid[finishNodeCol][finishNodeRow];
     let expectedResaults = getExpectedResaults(grid);
 
-    let results = Astar(grid, startNode, endNode);
+    let results = astar(grid, startNode, endNode);
     let visistedNodesInOrder = results[0];
     
     expect(visistedNodesInOrder).toStrictEqual(expectedResaults);
