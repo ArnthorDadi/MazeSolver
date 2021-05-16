@@ -1,5 +1,5 @@
 const { createCellNode, createAstarNode } = require('../../Services/NodeService/NodeService');
-function Astar(grid, start, finish){
+export function astar(grid, start, finish){
 
     let astartGrid = getAStarGrid(grid);
 
@@ -120,5 +120,3 @@ function stripExtraData(nodes){
     }
     return returnNodes;
 }
-
-module.exports = { Astar };

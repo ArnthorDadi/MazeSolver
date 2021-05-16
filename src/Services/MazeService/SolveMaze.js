@@ -1,5 +1,5 @@
 import {dijkstra, getDijkstraNodesInShortestPathOrder} from '../../Solvers/Dijkstra/Dijkstra';
-import {Astar} from '../../Solvers/AstarSearch/AstarSearch';
+import {astar} from '../../Solvers/AstarSearch/AstarSearch';
 
 export function getSolvedMazePath(grid, start, finish, solver){
     let visistedNodes;
@@ -17,7 +17,7 @@ export function getSolvedMazePath(grid, start, finish, solver){
             }
         // A* Search
         case 'A* Search':
-            nodeVisisted_finish = Astar(grid, start, finish);
+            nodeVisisted_finish = astar(grid, start, finish);
             visistedNodes = nodeVisisted_finish[0];
             shortestPath = getDijkstraNodesInShortestPathOrder(nodeVisisted_finish[1]);
             return {

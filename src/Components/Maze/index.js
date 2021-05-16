@@ -66,7 +66,7 @@ class Maze extends Component {
     createMaze = () => {
         this.clearMaze();
         const {grid, startCell, finishCell} = this.state;
-        const visistedNodes = recursiveBacktracker(grid, startCell, finishCell);
+        recursiveBacktracker(grid, startCell, finishCell);
         this.setState({grid});
     }
 

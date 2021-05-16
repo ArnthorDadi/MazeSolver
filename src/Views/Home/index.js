@@ -20,7 +20,7 @@ class Home extends Component {
             <>
                 <Header 
                     Title={"Maze Solver"} />
-                
+                <Maze Solvers={solvers} />
             </>
         );
     }

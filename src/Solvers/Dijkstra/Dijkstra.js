@@ -1,7 +1,7 @@
 const { createCellNode, createDijkstraNode } = require('../../Services/NodeService/NodeService');
 // Backtracks from the finishNode to find the shortest path.
 // Only works when called *after* the dijkstra method above.
-function getDijkstraNodesInShortestPathOrder(finish) {
+export function getDijkstraNodesInShortestPathOrder(finish) {
     const nodesInShortestPathOrder = [];
     let currentNode = finish;
     while (currentNode !== null) {
@@ -11,7 +11,7 @@ function getDijkstraNodesInShortestPathOrder(finish) {
     return nodesInShortestPathOrder;
 }
   
-function dijkstra(grid, start, finish)
+export function dijkstra(grid, start, finish)
 {
     const orderedVisitedNodes = [];
     let dijkstrasGrid = getDijkstraGrid(grid, start);
@@ -114,5 +114,3 @@ function updateUnvisitedNeighbors(node, grid) {
         }
         return dijkstraGrid;
     }
-
-module.exports = { dijkstra, getDijkstraNodesInShortestPathOrder };
