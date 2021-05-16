@@ -1,4 +1,4 @@
-function createCellNode(col, row, isStart, isFinish, isWall){
+export function createCellNode(col, row, isStart, isFinish, isWall){
     return {
         col: col,
         row: row,
@@ -8,7 +8,7 @@ function createCellNode(col, row, isStart, isFinish, isWall){
       };
 };
 
-function createDijkstraNode(col, row, isStart, isFinish, isWall, distance = Infinity){
+export function createDijkstraNode(col, row, isStart, isFinish, isWall, distance = Infinity){
     return {
         col: col,
         row: row,
@@ -21,7 +21,7 @@ function createDijkstraNode(col, row, isStart, isFinish, isWall, distance = Infi
       };
 };
 
-function createAstarNode(col, row, isStart, isFinish, isWall, distance=Infinity, heuristic=null, fullDistance=null){
+export function createAstarNode(col, row, isStart, isFinish, isWall, distance=Infinity, heuristic=null, fullDistance=null){
   return {
       col: col,
       row: row,
@@ -35,5 +35,3 @@ function createAstarNode(col, row, isStart, isFinish, isWall, distance=Infinity,
       fullDistance: fullDistance,
     };
 };
-
-module.exports = { createCellNode, createDijkstraNode, createAstarNode };
