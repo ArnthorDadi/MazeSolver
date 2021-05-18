@@ -71,28 +71,6 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin 
             docker push $IMAGE_NAME:$CIRCLE_SHA1
-  deploy:
-    docker:
-      - image: circleci/node:12.9.1-browsers
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - dependencies-{{ checksum "package.json" }}
-            - dependencies-
-      - run: npm install
-      - save_cache:
-          key: dependencies-{{ checksum "package.json" }}
-          paths:
-            - node_modules
-            - ~/.npm 
-            - ~/.cache
-      #- run:
-      #    name: Predeploy to github pages
-      #    command: CI=true npm run build
-      - run:
-          name: Deploy to github pages
-          command: npm run deploy
 
 workflows:
   # Below is the definition of your workflow.
@@ -108,14 +86,6 @@ workflows:
               only:
                 - main
       - publish:
-          filters:
-            branches:
-              only:
-                - main
-          requires:
-            - test
-            - build
-      - deploy:
           filters:
             branches:
               only:
