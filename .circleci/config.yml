@@ -112,6 +112,7 @@ workflows:
             branches:
               only:
                 - main
+                - HostOnGithub
           requires:
             - test
             - build
@@ -120,6 +121,7 @@ workflows:
             branches:
               only:
                 - main
+                - HostOnGithub
           requires:
             - test
             - build
