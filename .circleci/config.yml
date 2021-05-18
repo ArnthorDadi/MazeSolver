@@ -87,9 +87,9 @@ jobs:
             - node_modules
             - ~/.npm 
             - ~/.cache
-      - run:
-          name: Predeploy to github pages
-          command: npm run predeploy
+      #- run:
+      #    name: Predeploy to github pages
+      #    command: CI=true npm run build
       - run:
           name: Deploy to github pages
           command: npm run deploy
