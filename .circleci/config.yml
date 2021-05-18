@@ -90,9 +90,9 @@ jobs:
       - run:
           name: Predeploy to github pages
           command: npm run predeploy
-      - run:
-          name: Deploy to github pages
-          command: npm run deploy
+      #- run:
+      #    name: Deploy to github pages
+      #    command: npm run deploy
 
 workflows:
   # Below is the definition of your workflow.
